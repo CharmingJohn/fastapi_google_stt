@@ -14,48 +14,32 @@ logger.setLevel(logging.INFO)
 
 google_stt_app = FastAPI()
 
-config = {'encoding': 'LINEAR16', # wav
-          'sample_rate_hertz': 8000,
-          'language_code': 'en-US',
-          }
-
-audio = {'content': base64.b64encode(data).decode('utf-8')}
-
-payload= {
-    'config': config,
-    'audio': audio
-}
-
 api_key = '' # type your google stt api key
 api_url = 'https://speech.googleapis.com/v1/speech:recognize?alt=json&key=' + api_key
 
-class google_stt:
-    def __init__(self, payload):
-        self.payload = payload
+@google_stt_app.post('/google_stt_file/')
+async def google_stt_api(config: dict, file):
+    config = {'encoding': config['encoding'],  # wav
+              'sample_rate_hertz': config['sample_rate_hertz'],
+              'language_code': config['language_code'],
+              }
 
-    def response_stt_api_rest(self):
-        response = requests.post(api_url, json.dumps(self.payload))
+    audio = {'content': base64.b64encode(file).decode('utf-8')}
 
-        response = response.json()
+    payload = {
+        'config': config,
+        'audio': audio
+    }
 
-        try:
-            for result in response['results']:
-                print('Transcript: {}'.format(result['alternatives'][0]['transcript']))
-        except Exception as e:
-            print('error: ', e)
+    response = requests.post(api_url, json.dumps(payload))
 
-'''
-@google_stt_app.get('/')
-async def landing_page():
-    return 'visit /google_stt/'
+    response = response.json()
 
-@google_stt_app.post('/google_stt/')
-async def google_stt_api(payload):
-    test = google_stt(payload=payload)
-    result = test.response_stt_api_rest()
+    result_string = ''
 
-    return result
-'''
+    try:
+        for result in response['results']:
+            result_string += result['alternatives'][0]['transcript']
 
-test = google_stt(payload=payload)
-test.response_stt_api_rest()
+    except Exception as e:
+        print('error: ', e)
