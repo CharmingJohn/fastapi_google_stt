@@ -48,19 +48,5 @@ class google_stt:
         except Exception as e:
             print('error: ', e)
 
-
-'''
-@google_stt_app.get('/')
-async def landing_page():
-    return 'visit /google_stt/'
-
-@google_stt_app.post('/google_stt/')
-async def google_stt_api(payload):
-    test = google_stt(payload=payload)
-    result = test.response_stt_api_rest()
-
-    return result
-'''
-
 test = google_stt(payload=payload)
 test.response_stt_api_rest()
