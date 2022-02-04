@@ -1,18 +1,7 @@
-import time
-import datetime
-import re
-import logging
-import logging.handlers
-
 from fastapi import FastAPI, Query
 from enum import Enum
 from typing import Optional
 from pydantic import BaseModel
-
-LOG_FORMAT = '[%(asctime)-10s] (%(filename)s: %(levelname)s %(threadName)s - %(message)s'
-logging.basicConfig(format=LOG_FORMAT)
-logger = logging.getLogger('fastapi_drill_2')
-logger.setLevel(logging.INFO)
 
 class Item(BaseModel):
     name: str

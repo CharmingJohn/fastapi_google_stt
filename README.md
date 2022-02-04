@@ -36,7 +36,8 @@ api_url = 'https://speech.googleapis.com/v1/speech:recognize?alt=json&key=' + ap
 $ uvicorn google_stt_file_upload:google_stt_app --reload
 ```
 
-3. use postman, crul or other way to check response
+3. use postman, curl or other way to check response
+
 ![postman](postman_sample.png)
    
 ```

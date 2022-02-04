@@ -9,10 +9,17 @@ import json
 import time
 import os
 
-LOG_FORMAT = '[%(asctime)-10s] (%(filename)s: %(levelname)s %(threadName)s - %(message)s'
+LOG_FORMAT = "[%(asctime)-10s] (%(filename)s:%(lineno)d) %(levelname)s %(threadName)s - %(message)s"
 logging.basicConfig(format=LOG_FORMAT)
-logger = logging.getLogger('fastapi_drill_2')
+logger = logging.getLogger('google_stt_file_upload')
 logger.setLevel(logging.INFO)
+
+file_handler = logging.handlers.TimedRotatingFileHandler(
+        filename='./logs/google_stt_file_upload_log', when='midnight', interval=1
+        )
+file_handler.suffix = '%Y%m%d'
+logger.addHandler(file_handler)
+file_handler.setFormatter(logging.Formatter(LOG_FORMAT))
 
 google_stt_app = FastAPI()
 
@@ -33,10 +40,12 @@ async def google_stt_api(encoding: str = Form(...), sample_rate_hertz: int = For
         'config': config,
         'audio': audio
     }
+    logger.info('payload: ', payload)
 
     response = requests.post(api_url, json.dumps(payload))
-
     response = response.json()
+
+    logger.info('response from google stt: ', response)
 
     result_string = ''
 
@@ -44,6 +53,8 @@ async def google_stt_api(encoding: str = Form(...), sample_rate_hertz: int = For
         for result in response['results']:
             result_string += result['alternatives'][0]['transcript']
 
+        logger.info('result_string: ', result_string)
         return {'stt_result': result_string}
     except Exception as e:
+        logger.error('error: ', e)
         return {'error': e}
