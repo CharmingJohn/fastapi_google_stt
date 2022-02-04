@@ -1,8 +1,8 @@
-# google_stt with class, fastapi
+# google_stt with fastapi
 
 ## How to use
 
-### 1. google_stt.py (stt rest api with class)
+### 1. google_stt.py (stt rest api)
 set your wav file (ex. bed_8k.wav)
 ```python
 audio_file = open('bed_8k.wav', 'rb') # type your audio file source
@@ -19,4 +19,4 @@ run python
 python google_stt.py
 ```
 
-### 2. google_stt_file_upload.py (stt rest api with class)
+### 2. google_stt_file_upload.py (stt rest api with fastapi)

@@ -17,6 +17,7 @@ google_stt_app = FastAPI()
 audio_file = open('bed_8k.wav', 'rb') # type your audio file source
 data = audio_file.read()
 audio_file.close()
+
 config = {'encoding': 'LINEAR16', # wav
           'sample_rate_hertz': 8000,
           'language_code': 'en-US',
