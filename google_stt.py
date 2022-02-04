@@ -51,14 +51,14 @@ class google_stt:
         response = response.json()
         logger.info('response: ', response)
 
-        final_result = ''
+        result_string = ''
 
         try:
             for result in response['results']:
                 print('Transcript: {}'.format(result['alternatives'][0]['transcript']))
-                final_result += result['alternatives'][0]['transcript']
-            logger.info('final_result: ', final_result)
-            return final_result
+                result_string += result['alternatives'][0]['transcript']
+            logger.info('result_string: ', result_string)
+            return result_string
         except Exception as e:
             print('error: ', e)
             logger.error('error : e')
