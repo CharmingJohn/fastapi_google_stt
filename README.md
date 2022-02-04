@@ -1,4 +1,7 @@
 # google_stt with fastapi
+You can use the google stt rest api via this project
+1. only use google stt via rest api
+2. use google stt with fastapi
 
 ## How to use
 
