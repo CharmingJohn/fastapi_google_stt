@@ -44,4 +44,4 @@ curl --location --request POST 'http://127.0.0.1:8000/google_stt_file/' \
 --form 'encoding="LINEAR16"' \
 --form 'sample_rate_hertz="8000"' \
 --form 'language_code="en-US"' \
---form 'audio_file=@"{ROOT}bed_8k.wav"'```
+--form 'audio_file=@"{ROOT}/bed_8k.wav"'```
