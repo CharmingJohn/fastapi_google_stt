@@ -1,4 +1,7 @@
 # google_stt with fastapi
+You can use the google stt rest api via this project (with short file)
+1. only use google stt via rest api (google_stt.py)
+2. use google stt with fastapi (google_stt_file_upload.py)
 
 ## How to use
 
