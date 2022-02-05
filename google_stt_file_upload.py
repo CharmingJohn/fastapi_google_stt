@@ -13,7 +13,8 @@ LOG_FORMAT = "[%(asctime)-10s] (%(filename)s:%(lineno)d) %(levelname)s %(threadN
 logging.basicConfig(format=LOG_FORMAT)
 logger = logging.getLogger('google_stt_file_upload')
 logger.setLevel(logging.INFO)
-
+if not os.path.exists('./logs'):
+    os.mkdir('./logs')
 file_handler = logging.handlers.TimedRotatingFileHandler(
         filename='./logs/google_stt_file_upload_log', when='midnight', interval=1
         )
@@ -33,19 +34,19 @@ async def google_stt_api(encoding: str = Form(...), sample_rate_hertz: int = For
               'sample_rate_hertz': sample_rate_hertz,
               'language_code': language_code,
               }
-    audio_file = await audio_file.read()
-    audio = {'content': base64.b64encode(audio_file).decode('utf-8')}
+    audio_content = await audio_file.read()
+    audio = {'content': base64.b64encode(audio_content).decode('utf-8')}
 
     payload = {
         'config': config,
         'audio': audio
     }
-    logger.info('payload: ', payload)
+    logger.info('payload : {}, {}'.format(config, audio_file.filename))
 
     response = requests.post(api_url, json.dumps(payload))
     response = response.json()
 
-    logger.info('response from google stt: ', response)
+    logger.info('response from google stt: {}'.format(response))
 
     result_string = ''
 
@@ -53,8 +54,8 @@ async def google_stt_api(encoding: str = Form(...), sample_rate_hertz: int = For
         for result in response['results']:
             result_string += result['alternatives'][0]['transcript']
 
-        logger.info('result_string: ', result_string)
+        logger.info('result_string: {}'.format(result_string))
         return {'stt_result': result_string}
     except Exception as e:
-        logger.error('error: ', e)
+        logger.error('error: {}'.format(e))
         return {'error': e}

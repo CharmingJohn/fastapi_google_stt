@@ -6,12 +6,14 @@ import base64
 import requests
 import json
 import time
+import os
 
 LOG_FORMAT = "[%(asctime)-10s] (%(filename)s:%(lineno)d) %(levelname)s %(threadName)s - %(message)s"
 logging.basicConfig(format=LOG_FORMAT)
 logger = logging.getLogger('google_stt')
 logger.setLevel(logging.INFO)
-
+if not os.path.exists('./logs'):
+    os.mkdir('./logs')
 file_handler = logging.handlers.TimedRotatingFileHandler(
         filename='./logs/google_stt_log', when='midnight', interval=1
         )
@@ -22,7 +24,7 @@ file_handler.setFormatter(logging.Formatter(LOG_FORMAT))
 google_stt_app = FastAPI()
 
 audio_file = open('bed_8k.wav', 'rb') # type your audio file source
-data = audio_file.read()
+audio_content = audio_file.read()
 audio_file.close()
 
 config = {'encoding': 'LINEAR16', # wav
@@ -30,9 +32,9 @@ config = {'encoding': 'LINEAR16', # wav
           'language_code': 'en-US',
           }
 
-audio = {'content': base64.b64encode(data).decode('utf-8')}
+audio = {'content': base64.b64encode(audio_content).decode('utf-8')}
 
-payload= {
+payload = {
     'config': config,
     'audio': audio
 }
@@ -44,12 +46,12 @@ api_url = 'https://speech.googleapis.com/v1/speech:recognize?alt=json&key=' + ap
 class google_stt:
     def __init__(self, payload):
         self.payload = payload
-        logger.info('payload: ', payload)
+        logger.info('payload: {}'.format(payload))
 
     def response_stt_api_rest(self):
         response = requests.post(api_url, json.dumps(self.payload))
         response = response.json()
-        logger.info('response: ', response)
+        logger.info('response: {}'.format(response))
 
         result_string = ''
 
@@ -57,11 +59,11 @@ class google_stt:
             for result in response['results']:
                 print('Transcript: {}'.format(result['alternatives'][0]['transcript']))
                 result_string += result['alternatives'][0]['transcript']
-            logger.info('result_string: ', result_string)
+            logger.info('result_string: {}'.format(result_string))
             return result_string
         except Exception as e:
             print('error: ', e)
-            logger.error('error : e')
+            logger.error('error : {}'.format(e))
             return e
 
 
