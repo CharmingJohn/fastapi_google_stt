@@ -8,6 +8,7 @@ import requests
 import json
 import time
 import os
+import aiohttp
 
 LOG_FORMAT = "[%(asctime)-10s] (%(filename)s:%(lineno)d) %(levelname)s %(threadName)s - %(message)s"
 logging.basicConfig(format=LOG_FORMAT)
@@ -28,10 +29,10 @@ api_key = '' # type your google stt api key
 api_url = 'https://speech.googleapis.com/v1/speech:recognize?alt=json&key=' + api_key
 
 @google_stt_app.post('/google_stt_file/')
-async def google_stt_api(encoding: str = Form(...), sample_rate_hertz: int = Form(...), language_code: str = Form(...), audio_file: UploadFile = File(...)):
+async def google_stt_api(encoding: str = Form(...), sample_rate_hertz: int = Form(...), language_code: str = Form(...), audio_file: UploadFile = File(...)) -> dict:
 
     config = {'encoding': encoding,  # wav
-              'sample_rate_hertz': sample_rate_hertz,
+              'sample_rated_hertz': sample_rate_hertz,
               'language_code': language_code,
               }
     audio_content = await audio_file.read()
@@ -43,8 +44,10 @@ async def google_stt_api(encoding: str = Form(...), sample_rate_hertz: int = For
     }
     logger.info('payload : {}, {}'.format(config, audio_file.filename))
 
-    response = requests.post(api_url, json.dumps(payload))
-    response = response.json()
+    # response = requests.post(api_url, json.dumps(payload))
+    async with aiohttp.ClientSession() as session:
+        async with session.post(api_url, json.dumps(payload)) as response:
+            response = await response.json()
 
     logger.info('response from google stt: {}'.format(response))
 
