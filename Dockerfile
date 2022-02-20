@@ -1,6 +1,7 @@
 FROM python:3.9.10
 
 WORKDIR /app
+
 # RUN apt -y update
 
 COPY ./requirements.txt requirements.txt
