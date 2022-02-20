@@ -46,7 +46,7 @@ async def google_stt_api(encoding: str = Form(...), sample_rate_hertz: int = For
 
     # response = requests.post(api_url, json.dumps(payload))
     async with aiohttp.ClientSession() as session:
-        async with session.post(api_url, json.dumps(payload)) as response:
+        async with session.post(api_url, data=json.dumps(payload)) as response:
             response = await response.json()
 
     logger.info('response from google stt: {}'.format(response))
