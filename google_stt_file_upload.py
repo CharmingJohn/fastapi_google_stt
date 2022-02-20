@@ -32,7 +32,7 @@ api_url = 'https://speech.googleapis.com/v1/speech:recognize?alt=json&key=' + ap
 async def google_stt_api(encoding: str = Form(...), sample_rate_hertz: int = Form(...), language_code: str = Form(...), audio_file: UploadFile = File(...)) -> dict:
 
     config = {'encoding': encoding,  # wav
-              'sample_rated_hertz': sample_rate_hertz,
+              'sample_rate_hertz': sample_rate_hertz,
               'language_code': language_code,
               }
     audio_content = await audio_file.read()
